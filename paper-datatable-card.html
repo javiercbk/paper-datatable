@@ -96,7 +96,7 @@
 				margin-right: 18px;
 			}
 		</style>
-		<paper-material elevation="1">
+		<paper-material elevation="[[elevation]]">
 			<div class="horizontal center layout" id="topBlock">
 				<div class="flex header">
 					<span>{{header}}</span>
@@ -202,7 +202,7 @@
 					/**
 					 * Current page shown
 					 *
-					 * @attribute Number
+					 * @attribute page
 					 * @default 1
 					 * @type Object
 					 */
@@ -210,6 +210,15 @@
 						type: Number,
 						value: 1,
 						notify: true
+					},
+					/**
+					* Current paper elevation
+					* @attribute elevation
+					* @default 1
+					*/
+					elevation: {
+						type: Number,
+						value: 1
 					},
 					_disableSave: {
 						type: Boolean,
@@ -360,8 +369,10 @@
 					this.debounce("visibleData", function(){
 						this._disableSave = true;
 
-						var processItems = function(items){
-
+						var processItems = function(items, size){
+							if(size){
+								this.set('dataSource.length', size);
+							}
 							this._datatable.deselectAll(false);
 							this._datatable.splice('data', 0, this._datatable.data.length);
 
@@ -428,7 +439,11 @@
 
 						}else{
 							this.dataSource.get.apply(this.dataSource, queryArgs).then(function(items){
-								processItems(items);
+								if(items.hasOwnProperty('list')){
+									processItems(items.list, items.size);
+								}else{
+									processItems(items);
+								}
 							});
 						}
 					}, 0);
