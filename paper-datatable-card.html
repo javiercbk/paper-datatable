@@ -124,6 +124,11 @@
 			</div>
 			<div class="horizontal center layout" id="bottomBlock">
 				<div class="flex"></div>
+
+				<span>
+					<content select="download-link"></content>
+				</span>
+
 				<span>Rows per page:</span>
 				<paper-dropdown-menu no-label-float style="width: 68px;">
 					<paper-menu class="dropdown-content" selected="{{pageSize}}" attr-for-selected="value">
@@ -354,7 +359,6 @@
 					if(this.dataSource) {
 						ev.preventDefault();
 						this.firstPage();
-						console.log(ev.detail);
 						this._sortProperty = ev.detail.sort.property;
 						this._sortDirection = ev.detail.sort.direction;
 
@@ -372,6 +376,9 @@
 						var processItems = function(items, size){
 							if(size){
 								this.set('dataSource.length', size);
+								this.fire('candidates-loaded', {size: size});
+							}else{
+								this.fire('candidates-loaded', {size: items.length});
 							}
 							this._datatable.deselectAll(false);
 							this._datatable.splice('data', 0, this._datatable.data.length);
