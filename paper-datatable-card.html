@@ -411,10 +411,16 @@
 							this.dataSource.queryForIds.apply(this.dataSource, queryArgs).then(function(ids){
 								var items = [];
 								var i = 0;
+								var self = this;
 								var done = function(){
 									i++;
 									if(i == 2){
-										var sortedItems = ids.map((id) => items.find((item) => item[this.idProperty] == id));
+										var sortedItems = ids.map(function (id) {
+										  return items.find(function (item) {
+										    return item[self.idProperty] == id;
+										  });
+										});
+										//var sortedItems = ids.map((id) => items.find((item) => item[this.idProperty] == id));
 										processItems(sortedItems);
 									}
 								}.bind(this);

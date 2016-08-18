@@ -510,15 +510,25 @@ A [material design implementation of a data table](https://www.google.com/design
 
 				_queryAndSetColumns: function(){
 					var columns = this.queryAllEffectiveChildren('paper-datatable-column');
-					columns.forEach((column) => {
+					var self = this;
+					columns.forEach(function(column) {
 						if(!column.beenAttached.state.ready){
-							column.parentNodeRef = this;
-							this.async(function(){
+							column.parentNodeRef = self;
+							self.async(function(){
 								column._registerEvilFunctions();
 								column.beenAttached.ready();
 							});
 						}
 					});
+					// columns.forEach((column) => {
+					// 	if(!column.beenAttached.state.ready){
+					// 		column.parentNodeRef = this;
+					// 		this.async(function(){
+					// 			column._registerEvilFunctions();
+					// 			column.beenAttached.ready();
+					// 		});
+					// 	}
+					// });
 					this.set('_columns', columns.filter((column) => !column.inactive));
 					this.async(function(){
 						this._applySortedIndicatorsToDOM();
